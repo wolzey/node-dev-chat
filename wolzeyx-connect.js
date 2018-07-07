@@ -1,5 +1,6 @@
 const readline = require('readline')
 const chalk    = require('chalk')
+const fs = require('fs')
 const {
   USER_JOIN,
   USER_MESSAGE,
@@ -18,13 +19,20 @@ const {
 
 const { parseUserInput } = require('./socket/utils')
 const { getWolzeyHome } = require('./utils')
-const configs = getWolzeyHome('config.json')
 
-const url = process.argv[2]
+let url = process.argv[2]
+let userPreferences
+
+if (fs.existsSync(getWolzeyHome('config.json'))) {
+  userPreferences = JSON.parse(fs.readFileSync(getWolzeyHome('config.json')).toString())
+}
 
 if (!url) {
-  console.log('Missing connection url')
-  return process.exit(1)
+  if (!userPreferences && !userPreferences.url) {
+    return console.log('Missing connection url')
+  }
+
+  url = userPreferences.url
 }
 
 const socket = require('socket.io-client')(url)
@@ -37,14 +45,22 @@ const console_msg = (msg) => {
 }
 
 socket.on('connect', () => {
+  if (userPreferences.nickname) {
+    socket.emit('nick', userPreferences.nickname)
+  }
+
+  if (userPreferences.room) {
+    socket.emit('join', userPreferences.room)
+  }
+
   socket.on(USER_MESSAGE, ({username, message}) => {
     console_msg(`<${chalk.bold.blue(username)}>: ${chalk.green(message)}`)
   })
   socket.on(USER_JOIN, ({user, room}) => {
-    console_msg(`${chalk.green(user)} joined ${chalk.red(room)}`)
+    console_msg(`${chalk.green(user)} joined ${chalk.red(room)}\n`)
   })
   socket.on(NICKNAME, (username) => {
-    console_msg(`${username} is your new nickname`)
+    console_msg(`\n${username} is your new nickname\n`)
   })
   socket.on(HELP, (commands) => {
     console_msg(commands)
