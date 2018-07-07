@@ -2,7 +2,6 @@
   "name": "dev-chat",
   "version": "1.0.0",
   "description": "nodejs terminal chat application",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,8 +10,13 @@
     "terminal",
     "chat"
   ],
+  "main": "./wolzeyx.js",
   "author": "Ethan Wolz <ethan@creadiv.io>",
   "license": "ISC",
+  "bin": {
+    "wolzeyx": "./wolzeyx.js"
+  },
+  "preferGlobal": true,
   "dependencies": {
     "chalk": "^2.4.1",
     "commander": "^2.16.0",

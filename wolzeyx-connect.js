@@ -17,8 +17,16 @@ const {
 } = require('./socket/constants')
 
 const { parseUserInput } = require('./socket/utils')
+const { getWolzeyHome } = require('./utils')
+const configs = getWolzeyHome('config.json')
 
 const url = process.argv[2]
+
+if (!url) {
+  console.log('Missing connection url')
+  return process.exit(1)
+}
+
 const socket = require('socket.io-client')(url)
 
 const console_msg = (msg) => {
