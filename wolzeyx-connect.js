@@ -2,7 +2,10 @@ const readline = require('readline')
 const chalk    = require('chalk')
 const fs = require('fs')
 const {
+  JOIN_ERROR,
+  MESSAGE_ERROR,
   USER_JOIN,
+  USER_LEAVE,
   USER_MESSAGE,
   WHISPER,
   NICKNAME
@@ -28,7 +31,11 @@ if (fs.existsSync(getWolzeyHome('config.json'))) {
 }
 
 if (!url) {
-  if (!userPreferences && !userPreferences.url) {
+  if (!userPreferences) {
+    return console.log('Missing connection url')
+  }
+
+  if (!userPreferences.url) {
     return console.log('Missing connection url')
   }
 
@@ -45,13 +52,21 @@ const console_msg = (msg) => {
 }
 
 socket.on('connect', () => {
-  if (userPreferences.nickname) {
+  if (userPreferences && userPrefrences.nickname) {
     socket.emit('nick', userPreferences.nickname)
   }
 
-  if (userPreferences.room) {
+  if (userPreferences && userPreferences.room) {
     socket.emit('join', userPreferences.room)
   }
+
+  socket.on(JOIN_ERROR, (error) => {
+    console_msg(chalk.red(error))
+  })
+
+  socket.on(MESSAGE_ERROR, (error) => {
+    console_msg(chalk.red(error))
+  })
 
   socket.on(USER_MESSAGE, ({username, message}) => {
     console_msg(`<${chalk.bold.blue(username)}>: ${chalk.green(message)}`)
