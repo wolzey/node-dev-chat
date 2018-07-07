@@ -14,7 +14,7 @@ if (!fs.existsSync(getWolzeyHome())) {
 }
 
 if (!fs.existsSync(getWolzeyHome('config.json'))) {
-  fs.writeFileSync(getWolzeyHome('config.json'), configTemplate)
+  fs.writeFileSync(getWolzeyHome('config.json'), JSON.stringify(configTemplate, null, 2))
 }
 
 let userConfig = JSON.parse(fs.readFileSync(getWolzeyHome('config.json')).toString())
