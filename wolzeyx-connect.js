@@ -52,7 +52,7 @@ const console_msg = (msg) => {
 }
 
 socket.on('connect', () => {
-  if (userPreferences && userPrefrences.nickname) {
+  if (userPreferences && userPreferences.nickname) {
     socket.emit('nick', userPreferences.nickname)
   }
 
