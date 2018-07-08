@@ -23,7 +23,6 @@ let {
 } = jsonConfig
 
 if (!twilioId || !twilioToken || !twilioNumber) {
-  console.log(twilioId, twilioToken, twilioNumber)
   return process.exit(1)
 }
 if (!program.to || !program.message) {
@@ -37,8 +36,8 @@ sendSMS(twilioId, twilioToken, {
   body: program.message
 })
 .then((message) => {
-  console.log(message)
+  console.log('Message sent.')
 })
 .catch((error) => {
-  console.log(error)
+  console.error('Could not send your message.')
 })
