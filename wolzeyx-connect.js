@@ -74,6 +74,9 @@ socket.on('connect', () => {
   socket.on(USER_JOIN, ({user, room}) => {
     console_msg(`${chalk.green(user)} joined ${chalk.red(room)}\n`)
   })
+  socket.on(USER_LEAVE, (user) => {
+    console_msg(`\n ${user} has left`)
+  })
   socket.on(NICKNAME, (username) => {
     console_msg(`\n${username} is your new nickname\n`)
   })
