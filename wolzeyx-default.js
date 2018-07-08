@@ -7,6 +7,9 @@ program
   .option('-u, --url <connection-url>')
   .option('-n, --nickname <user-nickname>')
   .option('-r, --room <room-name>')
+  .option('-i, --twilio-id <twilio-account-sid>')
+  .option('-f, --twilio-number <twilio-from>')
+  .option('-t, --twilio-token <twilio-token>')
   .parse(process.argv)
 
 if (!fs.existsSync(getWolzeyHome())) {
@@ -18,8 +21,11 @@ if (!fs.existsSync(getWolzeyHome('config.json'))) {
 }
 
 let userConfig = JSON.parse(fs.readFileSync(getWolzeyHome('config.json')).toString())
-
-let editedConfig = ['nickname', 'url', 'room'].reduce((newConfig, confVar) => {
+console.log(program)
+let editedConfig = [
+  'nickname', 'url', 'room',
+  'twilioId', 'twilioNumber', 'twilioToken'
+].reduce((newConfig, confVar) => {
   if (program[confVar]) {
     newConfig[confVar] = program[confVar]
   } else {
