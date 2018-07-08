@@ -69,7 +69,7 @@ socket.on('connect', () => {
   })
 
   socket.on(USER_MESSAGE, ({username, message}) => {
-    console_msg(`\n<${chalk.bold.blue(username)}>: ${chalk.green(message)}\n`)
+    console_msg(`<${chalk.bold.blue(username)}>: ${chalk.green(message)}\n`)
   })
   socket.on(USER_JOIN, ({user, room}) => {
     console_msg(`${chalk.green(user)} joined ${chalk.red(room)}\n`)
