@@ -1,6 +1,8 @@
 const readline = require('readline')
 const chalk    = require('chalk')
 const fs = require('fs')
+const notifier = require('node-notifier')
+const path = require('path')
 const {
   JOIN_ERROR,
   MESSAGE_ERROR,
@@ -25,6 +27,7 @@ const { getWolzeyHome } = require('./utils')
 
 let url = process.argv[2]
 let userPreferences
+let User = {}
 
 if (fs.existsSync(getWolzeyHome('config.json'))) {
   userPreferences = JSON.parse(fs.readFileSync(getWolzeyHome('config.json')).toString())
@@ -69,6 +72,15 @@ socket.on('connect', () => {
   })
 
   socket.on(USER_MESSAGE, ({username, message}) => {
+    if (User.nickname !== username) {
+      notifier.notify({
+        title: 'New Message',
+        message: `${username}:\n${message}`,
+        sound: true,
+        icon: path.join(__dirname, 'hacker.png')
+      })
+    }
+
     console_msg(`<${chalk.bold.blue(username)}>: ${chalk.green(message)}\n`)
   })
   socket.on(USER_JOIN, ({user, room}) => {
@@ -78,6 +90,7 @@ socket.on('connect', () => {
     console_msg(`\n ${user} has left`)
   })
   socket.on(NICKNAME, (username) => {
+    User.nickname = userPreferences.nickname
     console_msg(`\n${username} is your new nickname\n`)
   })
   socket.on(HELP, (commands) => {
